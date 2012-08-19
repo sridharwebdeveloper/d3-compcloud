@@ -75,7 +75,7 @@
 				};
 			});
 		}(texts[0], texts[1]);
-		tags = d3.entries(tags);
+		tags = d3.entries(tags).sort(function(a, b) { return b.value.sum - a.value.sum });
 	    return tags;
 	}
 

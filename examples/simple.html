@@ -66,13 +66,14 @@
 			return words.map(function (w) {
 				var c1 = first[w] || 0, c2 = second[w] || 0;
 				return {
-					word: w,
+					text: w,
 					size: c1 + c2,
 					diff: (c1 - c2) / (c1 + c2),
 				};
 			});
 		}(texts[0], texts[1]);
 		tags = d3.entries(tags).sort(function(a, b) { return b.value.size - a.value.size });
+		tags.forEach(function(d) { d.key = cases[d.key]; });
 	    return tags;
 	}
 
@@ -91,18 +92,19 @@
 		return "rgb(" + red + "," + green + "," + blue + ")";
 	}
 
-	d3.layout.compcloud().size([300, 300]).words(["returned", "and", "saw", "under", "the", "sun", "that", "race", "is", "not", "to", "swift", "nor", "battle", "strong", "neither", "yet", "bread", "wise", "riches", "men", "of", "understanding", "favour", "skill", "but", "time", "chance", "happeneth", "them", "all"].map(function (d) {
-		return {
-			text: d,
-			size: 10 + Math.random() * 90,
-			diff: Math.random() * 2 - 1
-		};
+	var test1 = "This is a word cloud. It needs more words.",
+	    test2 = "Hello! This is a word cloud."
+
+	d3.layout.compcloud().size([300, 300]).words([test1, test2].reduce(function(text1, text2) {
+		return parseTexts(text1, text2);
+	}).map(function(d) {
+		return d.value;
 	})).rotate(function () {
 		return 0;
 	}).fontSize(function (d) {
-		return d.size;
+		return 30*d.size;
 	}).diff(function (d) {
-		return Math.random() * 2 - 1;
+		return d.diff;
 	}).on("end", draw).start();
 
 	function draw(words) {

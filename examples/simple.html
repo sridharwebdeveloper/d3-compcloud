@@ -64,18 +64,15 @@
 		var tags = function(first, second) {
 			var words = unique(($.merge($.merge([], Object.keys(first)), Object.keys(second))));
 			return words.map(function (w) {
-				var c1 = first[w] || 0;
-				var c2 = second[w] || 0;
+				var c1 = first[w] || 0, c2 = second[w] || 0;
 				return {
 					word: w,
-					count1: c1,
-					count2: c2,
-					sum: c1 + c2,
+					size: c1 + c2,
 					diff: (c1 - c2) / (c1 + c2),
 				};
 			});
 		}(texts[0], texts[1]);
-		tags = d3.entries(tags).sort(function(a, b) { return b.value.sum - a.value.sum });
+		tags = d3.entries(tags).sort(function(a, b) { return b.value.size - a.value.size });
 	    return tags;
 	}
 

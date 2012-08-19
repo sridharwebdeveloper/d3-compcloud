@@ -64,7 +64,8 @@
 		var tags = function(first, second) {
 			var words = unique(($.merge($.merge([], Object.keys(first)), Object.keys(second))));
 			return words.map(function (w) {
-				var c1 = first[w] || 0, c2 = second[w] || 0;
+				var c1 = (first[w] / Object.keys(second).length) || 0, 
+					c2 = (second[w] / Object.keys(first).length) || 0;
 				return {
 					text: w,
 					size: c1 + c2,
@@ -102,7 +103,7 @@
 	})).rotate(function () {
 		return 0;
 	}).fontSize(function (d) {
-		return 30*d.size;
+		return 100*d.size;
 	}).diff(function (d) {
 		return d.diff;
 	}).on("end", draw).start();

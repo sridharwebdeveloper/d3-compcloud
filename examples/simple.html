@@ -1,32 +1,115 @@
 <script src="../lib/d3/d3.js"></script>
-<script src="../d3.layout.cloud.js"></script>
+<script src="../d3.layout.compcloud.js"></script>
 <body>
 <script>
-  d3.layout.cloud().size([300, 300])
-      .words([
-        "Hello", "world", "normally", "you", "want", "more", "words",
-        "than", "this"].map(function(d) {
-        return {text: d, size: 10 + Math.random() * 90};
-      }))
-      .rotate(function() { return ~~(Math.random() * 2) * 90; })
-      .fontSize(function(d) { return d.size; })
-      .on("end", draw)
-      .start();
+	// Utility functions
+	
+	// I stole this
+	function unique(array) {
+		var o = {}, i, l = array.length,
+			r = [];
+		for (i = 0; i < l; i++) o[array[i]] = array[i];
+		for (i in o) r.push(o[i]);
+		return r;
+	}
 
-  function draw(words) {
-    d3.select("body").append("svg")
-        .attr("width", 300)
-        .attr("height", 300)
-      .append("g")
-        .attr("transform", "translate(150,150)")
-      .selectAll("text")
-        .data(words)
-      .enter().append("text")
-        .style("font-size", function(d) { return d.size + "px"; })
-        .attr("text-anchor", "middle")
-        .attr("transform", function(d) {
-          return "translate(" + [d.x, d.y] + ")rotate(" + d.rotate + ")";
-        })
-        .text(function(d) { return d.text; });
-  }
+	// Implementation functions
+
+	function make_words(string) {
+		common = [];
+		words = string.trim().toLocaleLowerCase().replace(/[^-a-z0-9 ]/, "").split(/[^-a-z0-9]/).filter(function (word) {
+			return word.length > 1
+		}).filter(function (word) {
+			return common.indexOf(word) < 0
+		});
+		return words;
+	}
+	function make_ngrams(string, n) {
+		common = [];
+		words = string.trim().toLocaleLowerCase().replace(/[^-a-z0-9 ]/, "").split(/[^-a-z0-9]/).filter(function (word) {
+			return word.length > 1
+		}).filter(function (word) {
+			return common.indexOf(word) < 0
+		});
+		var ngrams = [];
+		if (!n || n < 1) {
+			n = 1;
+		};
+		for (var i = 0; i < words.length - (n - 1); i++) {
+			temp = [];
+			for (var j = i; j < i + n; j++) temp.push(words[j]);
+			ngrams.push(temp)
+		};
+		return ngrams;
+	}
+
+	function count_words(words) {
+		counts = {};
+		words.forEach(function (word) {
+			counts[word] = ++counts[word] || 1
+		});
+		return counts;
+	}
+
+	function merge_counts(first, second) {
+		return unique(($.merge($.merge([], Object.keys(first)), Object.keys(second)))).map(function (w) {
+			var c1 = first[w] || 0;
+			var c2 = second[w] || 0;
+			return {
+				word: w,
+				count1: c1,
+				count2: c2,
+				sum: c1 + c2,
+				diff: (c1 - c2) / (c1 + c2),
+			}
+		});
+	}
+
+	function color(x) {
+		var max = 240;
+		var min = 100;
+		var step = (max - min) / 10;
+		green = min;
+		if (x < 0) {
+			red = max;
+			blue = ~~(max + step * 10*x);
+		} else {
+			blue = max;
+			red = ~~(max - step * 10*x);
+		}
+		return "rgb(" + red + "," + green + "," + blue + ")";
+	}
+
+	function test() {
+		var text1 = "I returned and saw under the sun, that the race is not to the swift, nor the battle to the strong, neither yet bread to the wise, nor yet riches to men of understanding, nor yet favour to men of skill; but time and chance happeneth to them all.";
+		var text2 = "Objective considerations of contemporary phenomena compel the conclusion that success or failure in competitive activities exhibits no tendency to be commensurate with innate capacity, but that a considerable element of the unpredictable must invariably be taken into account.";
+		var ngram1 = make_ngrams(text1, 1);
+		var ngram2 = make_ngrams(text2, 1);
+		return count_words(ngram1)
+	}
+	d3.layout.compcloud().size([300, 300]).words(["returned", "and", "saw", "under", "the", "sun", "that", "race", "is", "not", "to", "swift", "nor", "battle", "strong", "neither", "yet", "bread", "wise", "riches", "men", "of", "understanding", "favour", "skill", "but", "time", "chance", "happeneth", "them", "all"].map(function (d) {
+		return {
+			text: d,
+			size: 10 + Math.random() * 90,
+			diff: Math.random() * 2 - 1
+		};
+	})).rotate(function () {
+		return 0;
+	}).fontSize(function (d) {
+		return d.size;
+	}).diff(function (d) {
+		return Math.random() * 2 - 1;
+	}).on("end", draw).start();
+
+	function draw(words) {
+		d3.select("body").append("svg").attr("width", 300).attr("height", 300).append("g").attr("transform", "translate(150,150)").selectAll("text").data(words).enter().append("text").style("font-size", function (d) {
+			return d.size + "px";
+		}).style("fill", function(d) {
+			return color(d.diff);
+		}).attr("text-anchor", "middle").attr("transform", function (d) {
+			return "translate(" + [d.x, d.y] + ")rotate(" + d.rotate + ")";
+		}).text(function (d) {
+			return d.text;
+		});
+	}
 </script>

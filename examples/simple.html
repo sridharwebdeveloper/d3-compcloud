@@ -1,36 +1,12 @@
 <script src="../lib/d3/d3.js"></script>
 <script src="../d3.layout.compcloud.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
 <body>
 <script>
 	// Utility functions
 	
-	// I stole this
-	function unique(array) {
-		var o = {}, i, l = array.length,
-			r = [];
-		for (i = 0; i < l; i++) o[array[i]] = array[i];
-		for (i in o) r.push(o[i]);
-		return r;
-	}
-
-	// Implementation functions
-
-	function make_words(string) {
-		common = [];
-		words = string.trim().toLocaleLowerCase().replace(/[^-a-z0-9 ]/, "").split(/[^-a-z0-9]/).filter(function (word) {
-			return word.length > 1
-		}).filter(function (word) {
-			return common.indexOf(word) < 0
-		});
-		return words;
-	}
-	function make_ngrams(string, n) {
-		common = [];
-		words = string.trim().toLocaleLowerCase().replace(/[^-a-z0-9 ]/, "").split(/[^-a-z0-9]/).filter(function (word) {
-			return word.length > 1
-		}).filter(function (word) {
-			return common.indexOf(word) < 0
-		});
+	// May be useful
+	function make_ngrams(words, n) {
 		var ngrams = [];
 		if (!n || n < 1) {
 			n = 1;
@@ -42,27 +18,65 @@
 		};
 		return ngrams;
 	}
-
-	function count_words(words) {
-		counts = {};
-		words.forEach(function (word) {
-			counts[word] = ++counts[word] || 1
-		});
-		return counts;
+	
+	// I stole this
+	function unique(array) {
+		var o = {}, i, l = array.length,
+			r = [];
+		for (i = 0; i < l; i++) o[array[i]] = array[i];
+		for (i in o) r.push(o[i]);
+		return r;
 	}
 
-	function merge_counts(first, second) {
-		return unique(($.merge($.merge([], Object.keys(first)), Object.keys(second)))).map(function (w) {
-			var c1 = first[w] || 0;
-			var c2 = second[w] || 0;
-			return {
-				word: w,
-				count1: c1,
-				count2: c2,
-				sum: c1 + c2,
-				diff: (c1 - c2) / (c1 + c2),
-			}
+	var maxLength = 30;
+	
+	// From Jonathan Feinberg's cue.language, see lib/cue.language/license.txt.
+	var stopWords = /^(i|me|my|myself|we|us|our|ours|ourselves|you|your|yours|yourself|yourselves|he|him|his|himself|she|her|hers|herself|it|its|itself|they|them|their|theirs|themselves|what|which|who|whom|whose|this|that|these|those|am|is|are|was|were|be|been|being|have|has|had|having|do|does|did|doing|will|would|should|can|could|ought|i'm|you're|he's|she's|it's|we're|they're|i've|you've|we've|they've|i'd|you'd|he'd|she'd|we'd|they'd|i'll|you'll|he'll|she'll|we'll|they'll|isn't|aren't|wasn't|weren't|hasn't|haven't|hadn't|doesn't|don't|didn't|won't|wouldn't|shan't|shouldn't|can't|cannot|couldn't|mustn't|let's|that's|who's|what's|here's|there's|when's|where's|why's|how's|a|an|the|and|but|if|or|because|as|until|while|of|at|by|for|with|about|against|between|into|through|during|before|after|above|below|to|from|up|upon|down|in|out|on|off|over|under|again|further|then|once|here|there|when|where|why|how|all|any|both|each|few|more|most|other|some|such|no|nor|not|only|own|same|so|than|too|very|say|says|said|shall)$/,
+		punctuation = /[!"&()*+,-\.\/:;<=>?\[\\\]^`\{|\}~]+/g,
+		wordSeparators = /[\s\u3031-\u3035\u309b\u309c\u30a0\u30fc\uff70]+/g,
+		discard = /^(@|https?:)/,
+		htmlTags = /(<[^>]*?>|<script.*?<\/script>|<style.*?<\/style>|<head.*?><\/head>)/g,
+		matchTwitter = /^https?:\/\/([^\.]*\.)?twitter\.com/;
+
+	function make_words(string) {
+		common = [];
+		words = string.trim().toLocaleLowerCase().replace(/[^-a-z0-9 ]/, "").split(/[^-a-z0-9]/).filter(function (word) {
+			return word.length > 1
+		}).filter(function (word) {
+			return common.indexOf(word) < 0
 		});
+		return words;
+	}
+	
+	function parseTexts(text1, text2) {
+		var texts = [text1, text2].map(function(text) {
+			tags = {}, cases = {};
+			text.split(wordSeparators).forEach(function(word) {
+				if (discard.test(word)) return;
+				word = word.replace(punctuation, "");
+				if (stopWords.test(word.toLowerCase())) return;
+				word = word.substr(0, maxLength);
+				cases[word.toLowerCase()] = word;
+				tags[word = word.toLowerCase()] = (tags[word] || 0) + 1;
+			});
+			return tags;
+		});
+		var tags = function(first, second) {
+			var words = unique(($.merge($.merge([], Object.keys(first)), Object.keys(second))));
+			return words.map(function (w) {
+				var c1 = first[w] || 0;
+				var c2 = second[w] || 0;
+				return {
+					word: w,
+					count1: c1,
+					count2: c2,
+					sum: c1 + c2,
+					diff: (c1 - c2) / (c1 + c2),
+				};
+			});
+		}(texts[0], texts[1]);
+		tags = d3.entries(tags);
+	    return tags;
 	}
 
 	function color(x) {
@@ -80,13 +94,6 @@
 		return "rgb(" + red + "," + green + "," + blue + ")";
 	}
 
-	function test() {
-		var text1 = "I returned and saw under the sun, that the race is not to the swift, nor the battle to the strong, neither yet bread to the wise, nor yet riches to men of understanding, nor yet favour to men of skill; but time and chance happeneth to them all.";
-		var text2 = "Objective considerations of contemporary phenomena compel the conclusion that success or failure in competitive activities exhibits no tendency to be commensurate with innate capacity, but that a considerable element of the unpredictable must invariably be taken into account.";
-		var ngram1 = make_ngrams(text1, 1);
-		var ngram2 = make_ngrams(text2, 1);
-		return count_words(ngram1)
-	}
 	d3.layout.compcloud().size([300, 300]).words(["returned", "and", "saw", "under", "the", "sun", "that", "race", "is", "not", "to", "swift", "nor", "battle", "strong", "neither", "yet", "bread", "wise", "riches", "men", "of", "understanding", "favour", "skill", "but", "time", "chance", "happeneth", "them", "all"].map(function (d) {
 		return {
 			text: d,

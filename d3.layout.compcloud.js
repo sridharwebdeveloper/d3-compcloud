@@ -9,6 +9,7 @@
         rotate = cloudRotate,
         padding = cloudPadding,
         spiral = archimedeanSpiral,
+		diff = cloudDiff,
         words = [],
         timeInterval = Infinity,
         event = d3.dispatch("word", "end"),
@@ -27,7 +28,8 @@
           font: font.call(this, d, i),
           rotate: rotate.call(this, d, i),
           size: ~~fontSize.call(this, d, i),
-          padding: cloudPadding.call(this, d, i)
+          padding: cloudPadding.call(this, d, i),
+		  diff: diff.call(this, d, i)
         };
       }).sort(function(a, b) { return b.size - a.size; });
 
@@ -42,8 +44,8 @@
             d;
         while (+new Date - start < timeInterval && ++i < n && timer) {
           d = data[i];
-          d.x = (size[0] * d.diff) >> 1;
-          d.y = (size[1] * (Math.random() + .5)) >> 1;
+		  d.x = (size[0] * (Math.random() + .5)) >> 1;
+          d.y = ((size[1] * d.diff) >> 1) + (size[1] >> 1);
           cloudSprite(d, data, i);
           if (place(board, d, bounds)) {
             tags.push(d);
@@ -174,6 +176,12 @@
       return cloud;
     };
 
+	cloud.diff = function(x) {
+	  if (!arguments.length) return diff;
+	  diff = d3.functor(x);
+	  return cloud;
+	};
+	  
     return d3.rebind(cloud, event, "on");
   }
 
@@ -195,6 +203,10 @@
 
   function cloudPadding() {
     return 1;
+  }
+  
+  function cloudDiff() {
+    return Math.random() * 2 - 1;
   }
 
   // Fetches a monochrome sprite bitmap for the specified text.

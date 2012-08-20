@@ -103,8 +103,11 @@
 	}).map(function(d) {
 		return d.value;
 	})).rotate(function () {
-		return 0;
-	}).fontSize(function (d) {
+		if (Math.random() < 0.75) {
+			return 0;
+		} else {
+			return -90;
+	}}).fontSize(function (d) {
 		return 75*d.size;
 	}).diff(function (d) {
 		return d.diff;

@@ -101,6 +101,8 @@
 		
         if (tag.x + tag.x0 - tag.width < 0 || tag.y + tag.y0 - tag.height < 0 ||
             tag.x + tag.x1 > size[0] || tag.y + tag.y1 > size[1]) continue;
+		// Make sure that tags of a certain color stay roughly in the right place (namely, the right half).
+		if (tag.diff < 0 && tag.y + tag.y0 > (size[1] >> 1) || tag.diff > 0 && tag.y + tag.y0 < (size[1] >> 1)) continue;
         // TODO only check for collisions within current bounds.
         if (!bounds || !cloudCollide(tag, board, size[0])) {
           if (!bounds || collideRects(tag, bounds)) {

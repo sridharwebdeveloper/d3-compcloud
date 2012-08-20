@@ -1,7 +1,7 @@
 {
-  "name": "d3.layout.cloud",
-  "version": "1.0.1",
-  "description": "Generate word clouds in JavaScript.",
+  "name": "d3.layout.compcloud",
+  "version": "0.1",
+  "description": "Generate comparative word clouds in JavaScript.",
   "keywords": [
     "word",
     "cloud",
@@ -9,16 +9,16 @@
     "visualization",
     "canvas"
   ],
-  "homepage": "http://www.jasondavies.com/wordcloud/",
+  "homepage": "http://github.com/zthomae/d3-compcloud",
   "author": {
-    "name": "Jason Davies",
-    "url": "http://www.jasondavies.com/"
+    "name": "Zach Thomae",
+    "url": "http://twitter.com/zthomae"
   },
   "repository": {
+    "url": "http://github.com/zthomae/d3-compcloud.git"
     "type": "git",
-    "url": "http://github.com/jasondavies/d3-cloud.git"
   },
-  "main": "d3.layout.cloud.js",
+  "main": "d3.layout.compcloud.js",
   "dependencies": {
     "canvas": "0.10.x"
   },

@@ -53,8 +53,8 @@
             if (bounds) cloudBounds(bounds, d);
             else bounds = [{x: d.x + d.x0, y: d.y + d.y0}, {x: d.x + d.x1, y: d.y + d.y1}];
             // Temporary hack
-            d.x -= size[0] >> 1;
-            d.y -= size[1] >> 1;
+            //d.x -= size[0] >> 1;
+            //d.y -= size[1] >> 1;
           }
         }
         if (i >= n) {
@@ -99,7 +99,7 @@
         tag.x = startX + dx;
         tag.y = startY + dy;
 		
-        if (tag.x + tag.x0 - tag.width < 0 || tag.y + tag.y0 - tag.height < 0 ||
+        if (tag.x + tag.x0 < 0 || tag.y + tag.y0 < 0 ||
             tag.x + tag.x1 > size[0] || tag.y + tag.y1 > size[1]) continue;
 		// Make sure that tags of a certain color stay roughly in the right place (namely, the right half).
 		if (tag.diff < 0 && tag.y + tag.y0 > (size[1] >> 1) || tag.diff > 0 && tag.y + tag.y0 < (size[1] >> 1)) continue;

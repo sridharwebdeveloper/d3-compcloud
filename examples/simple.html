@@ -1,6 +1,5 @@
 <script src="../lib/d3/d3.v2.js"></script>
 <script src="../d3.layout.compcloud.js"></script>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
 <body>
 <script>
 	// Utility functions
@@ -58,7 +57,7 @@
 			return tags;
 		});
 		var tags = function(first, second) {
-			var words = unique(($.merge($.merge([], Object.keys(first)), Object.keys(second))));
+			var words = unique(Object.keys(first).concat(Object.keys(second)));
 			return words.map(function (w) {
 				var c1 = (first[w] / Object.keys(first).length) || 0, 
 					c2 = (second[w] / Object.keys(second).length) || 0;

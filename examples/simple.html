@@ -60,8 +60,8 @@
 		var tags = function(first, second) {
 			var words = unique(($.merge($.merge([], Object.keys(first)), Object.keys(second))));
 			return words.map(function (w) {
-				var c1 = (first[w] / Object.keys(second).length) || 0, 
-					c2 = (second[w] / Object.keys(first).length) || 0;
+				var c1 = (first[w] / Object.keys(first).length) || 0, 
+					c2 = (second[w] / Object.keys(second).length) || 0;
 				return {
 					text: w,
 					size: c1 + c2,
@@ -114,7 +114,7 @@
 	}).on("end", draw).start();
 
 	function draw(words) {
-		d3.select("body").append("svg").attr("width", width).attr("height", height).append("g").attr("transform", "translate(150,150)").selectAll("text").data(words).enter().append("text").style("font-size", function (d) {
+		d3.select("body").append("svg").attr("width", width).attr("height", height).append("g").attr("transform", "translate(0,0)").selectAll("text").data(words).enter().append("text").style("font-size", function (d) {
 			return d.size + "px";
 		}).style("fill", function(d) {
 			return color(d.diff);

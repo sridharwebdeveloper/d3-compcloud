@@ -1,5 +1,10 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
 <script src="../lib/d3/d3.v2.js"></script>
 <script src="../d3.layout.compcloud.js"></script>
+</head>
 <body>
 <script>
 	// Variables for configuring the comparative word cloud
@@ -43,7 +48,7 @@
 	*/
 	function parseTexts(text1, text2) {
 	var texts = [text1, text2].map(function(text) {
-		tags = {}, cases = {};
+    tags = {}, cases = {};
 		text.split(wordSeparators).forEach(function(word) {
 			if (discard.test(word)) return;
 			word = word.replace(punctuation, "");
@@ -117,3 +122,5 @@
 		});
 	}
 </script>
+</body>
+</html>

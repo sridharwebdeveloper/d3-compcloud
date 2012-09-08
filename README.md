@@ -13,7 +13,7 @@ with words disproportionately used in one article or another appearing
 closer to the top or bottom. Their placement is not absolute, however,
 and I recommend showing that information in color or some other way.
 
-![Example cloud created from two Jay Rosen posts](https://s3.amazonaws.com/zthomae-project-pics/rosencloud.PNG)
+![Example cloud](https://s3.amazonaws.com/zthomae-project-pics/cloud2.PNG)
 
 ## Usage
 
@@ -27,7 +27,7 @@ it’s **asynchronous** and **stateful**.
 
 * Words sometimes appear off-canvas.
 
-## Based heavily on [Jason Davies'](http://www.jasondavies.com) Word Cloud Layout.
+## Forked from [Jason Davies'](http://www.jasondavies.com) Word Cloud Layout.
 
 ### Description:
 

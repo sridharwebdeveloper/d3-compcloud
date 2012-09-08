@@ -23,9 +23,13 @@ This layout requires [D3](http://mbostock.github.com/d3/).  It’s similar to
 [d3.layout.force](https://github.com/mbostock/d3/wiki/Force-Layout), in that
 it’s **asynchronous** and **stateful**.
 
-## Bugs
+## Things you should watch out for
 
-* Words sometimes appear off-canvas.
+* There is nothing stopping words from appearing off-canvas (or not at all). Play with
+these settings until you get something that works for you:
+    * Canvas size
+	* Word size
+    * How many words appear in the cloud	
 
 ## Forked from [Jason Davies'](http://www.jasondavies.com) Word Cloud Layout.
 

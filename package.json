@@ -1,6 +1,6 @@
 {
   "name": "d3.layout.compcloud",
-  "version": "0.1",
+  "version": "12.9.7",
   "description": "Generate comparative word clouds in JavaScript.",
   "keywords": [
     "word",
@@ -14,6 +14,12 @@
     "name": "Zach Thomae",
     "url": "http://twitter.com/zthomae"
   },
+  "licenses": [
+    {
+	  "type": "The BSD 3-Clause License",
+	  "url": "http://opensource.org/licenses/BSD-3-Clause"
+	}
+  ],
   "repository": {
     "url": "http://github.com/zthomae/d3-compcloud.git"
     "type": "git",

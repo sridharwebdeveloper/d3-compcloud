@@ -1,6 +1,6 @@
 {
   "name": "d3.layout.compcloud",
-  "version": "12.9.7",
+  "version": "12.9.8",
   "description": "Generate comparative word clouds in JavaScript.",
   "keywords": [
     "word",

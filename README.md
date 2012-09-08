@@ -3,7 +3,8 @@
 This is a layout for creating comparative word clouds.
 
 Comparative word clouds are like normal word clouds, except they
-compare the words used in two sources.
+compare the words used in two sources. You can read more about
+them [here.](http://zthomae.tumblr.com/post/31121181123/introducing-comparative-word-clouds)
 
 The words are sized based on the number of times they are used in
 either article. They words are placed in the cloud based on how

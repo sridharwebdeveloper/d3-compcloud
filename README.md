@@ -14,7 +14,7 @@ with words disproportionately used in one article or another appearing
 closer to either side. Their placement is not absolute, however,
 and I recommend showing that information in color or some other way.
 
-![Example cloud](https://s3.amazonaws.com/zthomae-project-pics/horizcloud.PNG)
+![Example cloud](https://s3.amazonaws.com/zthomae-project-pics/horizcloud.png)
 
 ## Usage
 

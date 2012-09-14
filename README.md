@@ -11,10 +11,10 @@ either article. They words are placed in the cloud based on how
 relatively often they are used--words that are used about the same
 number of times in both articles tend to appear closer to the middle,
 with words disproportionately used in one article or another appearing
-closer to the top or bottom. Their placement is not absolute, however,
+closer to either side. Their placement is not absolute, however,
 and I recommend showing that information in color or some other way.
 
-![Example cloud](https://s3.amazonaws.com/zthomae-project-pics/cloud2.PNG)
+![Example cloud](https://s3.amazonaws.com/zthomae-project-pics/horizcloud.PNG)
 
 ## Usage
 

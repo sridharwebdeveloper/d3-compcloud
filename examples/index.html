@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="css/bootstrap.css" rel="stylesheet" type="text/css">
+    <link href="css/bootstrap-responsive.css" rel="stylesheet" type="text/css">
+  </head>
+  <body>
+    <div class="navbar navbar-inverse navbar-fixed-top">
+      <div class="navbar-inner">
+        <a class="brand" href="#">Clever Title</a>
+        <ul class="nav">
+          <li><a href="#top">Home</a></li>
+          <li><a href="#about">About</a></li>
+          <li><a href="#contact">Contact</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="page-header" id="top">
+      <h1>Make a cloud</h1>
+    </div>
+    <div id="viz">
+    </div>
+    <form id="cloud_options">
+      <fieldset id="canvas_settings">
+        <div class="tabbable">
+          <ul class="nav nav-tabs">
+            <li class="active"><a href="#canvastab" data-toggle="tab">Canvas size</a></li>
+            <li><a href="#wordtab" data-toggle="tab">Word size</a></li>
+            <li><a href="#colortab" data-toggle="tab">Colors</a></li>
+            <li><a href="#rotationtab" data-toggle="tab">Rotation</a></li>
+          </ul>
+          <div class="tab-content">
+            <div class="tab-pane active" id="canvastab">
+              <div class="span4">
+                <select name="canvassize">
+                  <option value="med">Medium</option>
+                  <option value="large">Large</option>
+                </select>
+              </div> 
+              <div class="span8">
+                <small>This is where you set the size of the canvas to draw words on.</small>
+              </div>
+            </div>
+            <div class="tab-pane" id="wordtab">
+              <div class="span4">
+                <input type="range" name="fontsize" min="0" max="100" value="50" />
+              </div>
+              <div class="span8">
+                <small>Make the words bigger or smaller.</small>
+              </div>
+            </div>
+            <div class="tab-pane" id="colortab">
+              <div class="span4">
+                <select name="colors">
+                  <option value="redblue_white">Red and blue on white</option>
+                  <option value="redblue_black">Red and blue on black</option>
+                </select>
+              </div>
+              <div class="span8">
+                <small>Set the color of the palette to use. The palette is made up of two &quot;extreme&quot; colors and a background color.</small>
+              </div>
+            </div>
+            <div class="tab-pane" id="rotationtab">
+              <div class="span4">
+                <select name="rotation">
+                  <option value="100">All horizontal</option>
+                  <option value="75">Mostly horizontal</option>
+                  <option value="50">Half horizontal, half vertical</option>
+                  <option value="25">Mostly vertical</option>
+                  <option value="0">All vertical</option>
+                </select>
+              </div>
+              <div class="span8">
+                <small>Set the rotation style of the cloud. Words will either appear horizontal or vertical.</small>
+              </div>
+            </div>
+          </div>
+        </div>
+      </fieldset>
+      <fieldset id="input_area">
+        <div class="row-fluid">
+          <div class="span6">
+            <textarea id="text1" class="span12" placeholder="First text goes here..." rows="10"></textarea>
+          </div>
+          <div class="span6">
+            <textarea id="text2" class="span12" placeholder="Second text goes here..." rows="10"></textarea>
+          </div>
+        </div>
+      </fieldset>
+      <div class="row-fluid">
+        <div class="span12">
+          <button class="span4" type="submit">Make my cloud!</button>
+        </div>
+      </div>
+    </form>
+    <script src="http://code.jquery.com/jquery-latest.js"></script>
+    <script src="js/bootstrap.js"></script>
+    <script src="../lib/d3/d3.v2.js"></script>
+    <script src="../d3.layout.compcloud.js"></script>
+    <script src="js/cloud.js"></script>
+  </body>
+</html>

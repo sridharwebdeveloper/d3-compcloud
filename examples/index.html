@@ -20,7 +20,9 @@
     <div class="page-header" id="top">
       <h1>Make a cloud</h1>
     </div>
-    <div id="viz">
+    <div class="row-fluid">
+      <div class="span12" id="viz">
+      </div>
     </div>
     <form id="cloud_options">
       <fieldset id="canvas_settings">
@@ -31,13 +33,10 @@
             <li><a href="#colortab" data-toggle="tab">Colors</a></li>
             <li><a href="#rotationtab" data-toggle="tab">Rotation</a></li>
           </ul>
-          <div class="tab-content">
+          <div class="tab-content row-fluid">
             <div class="tab-pane active" id="canvastab">
               <div class="span4">
-                <select name="canvassize">
-                  <option value="med">Medium</option>
-                  <option value="large">Large</option>
-                </select>
+                <input type="range" name="canvassize" min="250" max="1000" value="500" />    
               </div> 
               <div class="span8">
                 <small>This is where you set the size of the canvas to draw words on.</small>

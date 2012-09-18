@@ -1,26 +1,27 @@
-var sizes = {
-  "med": [500, 300],
-  "large": [750, 450]
-};
-
-var size = sizes["med"],
-    maxLength = 30,
-    texts = [];
+var maxLength = 30,
+    texts = [],
+    width = 500, 
+    whratio = 0.7;
 
 var form = d3.select("#cloud_options")
   .on("submit", function() {
     d3.event.preventDefault();
-    texts = [];
-    d3.selectAll("textarea")[0].forEach(function(textarea) {
-      texts.push(textarea.value);
-    });
-    make_cloud(texts[0], texts[1]);
+    generate();
 });
 
 var canvasSizeTab = d3.select("[name=canvassize]")
-  .on("change", function() {
-    size = sizes[d3.select("[name=canvassize]").property("value")];
-})
+  .on("mousedown", function() {
+    d3.select("svg").append("rect").attr("width", width).attr("height", width*whratio)
+    .style("fill", "rgb(0,0,0").style("opacity", 0.5)
+}).on("change", function() {
+    width = d3.select("[name=canvassize]").property("value");
+    d3.select("svg").attr("width", width).attr("height", width*whratio);
+    d3.select("rect").attr("width", width).attr("height", width*whratio);
+}).on("mouseup", function() {
+    d3.select("rect").remove();
+    layout.size([width, width*whratio]);
+    generate();
+});
 
 var fontSizeTab = d3.select("[name=fontsize]")
   .on("mouseup", function() {
@@ -39,7 +40,7 @@ var rotationTab = d3.select("[name=rotation]")
 });
 
 var layout = d3.layout.compcloud()
-	.size(size)
+	.size([width, width*whratio])
 	.rotate(function () {
 		if (Math.random() < 0.75) {
 			return 0;
@@ -47,7 +48,7 @@ var layout = d3.layout.compcloud()
 			return -90;
 		}})
 	.fontSize(function (d) {
-		return 75 * d.size; })
+		return d3.scale["sqrt"]().range([5, 50])(d.size); })
 	.diff(function (d) {
 		return d.diff; })
 	.on("end", draw);
@@ -145,7 +146,7 @@ function color(x) {
 
 function draw(words) {
     d3.select("svg").remove();
-    d3.select("#viz").append("svg").attr("width", size[0]).attr("height", size[1]).append("g").attr("transform", "translate(0,0)").selectAll("text").data(words).enter().append("text").style("font-size", function (d) {
+    d3.select("#viz").append("svg").attr("width", width).attr("height", width*whratio).append("g").attr("transform", "translate(0,0)").selectAll("text").data(words).enter().append("text").style("font-size", function (d) {
         return d.size + "px";
     }).style("fill", function (d) {
         return color(d.diff);
@@ -160,4 +161,12 @@ function make_cloud(text1, text2) {
 	layout.words(parseTexts(text1, text2).map(function (d) {
 		return d.value;
 	})).start();
+};
+
+function generate() {
+  texts = [];
+  d3.selectAll("textarea")[0].forEach(function(textarea) {
+    texts.push(textarea.value);
+  });
+  make_cloud(texts[0], texts[1]);
 };

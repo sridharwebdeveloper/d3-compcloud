@@ -1,12 +1,15 @@
 var maxLength = 30,
     texts = [],
     width = 500, 
-    whratio = 0.7;
+    whratio = 0.7,
+    wordsize = 50,
+    horizratio = 1;
 
 var form = d3.select("#cloud_options")
   .on("submit", function() {
     d3.event.preventDefault();
-    generate();
+    if (d3.select("#text1").property("value") && d3.select("#text2").property("value")) generate();
+    else alert("You must fill in both text boxes!");
 });
 
 var canvasSizeTab = d3.select("[name=canvassize]")
@@ -20,34 +23,35 @@ var canvasSizeTab = d3.select("[name=canvassize]")
 }).on("mouseup", function() {
     d3.select("rect").remove();
     layout.size([width, width*whratio]);
-    generate();
+    if (d3.select("#text1").property("value") && d3.select("#text2").property("value")) generate();
 });
 
 var fontSizeTab = d3.select("[name=fontsize]")
   .on("mouseup", function() {
-    alert(d3.select("[name=fontsize]").property("value"));
+    wordsize = d3.select("[name=fontsize]").property("value");
+    layout.fontSize(function (d) {
+		  return d3.scale["sqrt"]().range([wordsize/10, wordsize])(d.size);
+    });
+    if (d3.select("#text1").property("value") && d3.select("#text2").property("value")) generate();
 });
 
 var colorTab = d3.select("[name=colors]")
   .on("change", function() {
-    alert(d3.select("[name=colors]").property("value"));
+    alert("I have not implemented this yet!");
 });
 
 var rotationTab = d3.select("[name=rotation]")
   .on("change", function() {
-    alert("Horizontal: " + d3.select("[name=rotation]").property("value")
-    + "\n" + "Vertical: " + (100 - d3.select("[name=rotation]").property("value")));
+    horizratio = d3.select("[name=rotation]").property("value");
+    if (d3.select("#text1").property("value") && d3.select("#text2").property("value")) generate();
 });
 
 var layout = d3.layout.compcloud()
 	.size([width, width*whratio])
-	.rotate(function () {
-		if (Math.random() < 0.75) {
-			return 0;
-		} else {
-			return -90;
-		}})
-	.fontSize(function (d) {
+	.rotate(function() {
+    if (Math.random() < horizratio) return 0;
+    else return -90; })
+  .fontSize(function (d) {
 		return d3.scale["sqrt"]().range([5, 50])(d.size); })
 	.diff(function (d) {
 		return d.diff; })

@@ -45,7 +45,7 @@
         while (+new Date - start < timeInterval && ++i < n && timer) {
           d = data[i];
           d.x = ((size[0] * (d.diff + 1))) >> 1;
-          d.y = (size[1] * Math.random() + .5) >> 1;
+          d.y = (size[1] * (Math.random() + .5)) >> 1;
           cloudSprite(d, data, i);
           if (place(board, d, bounds)) {
             tags.push(d);
@@ -102,7 +102,7 @@
         if (tag.x + tag.x0 < 0 || tag.y + tag.y0 < 0 ||
             tag.x + tag.x1 > size[0] || tag.y + tag.y1 > size[1]) continue;
 		// Make sure that tags of a certain color stay roughly in the right place (namely, the right half).
-		if (tag.diff < 0 && tag.y + tag.y0 > (size[1] >> 1) || tag.diff > 0 && tag.y + tag.y0 < (size[1] >> 1)) continue;
+		if (tag.diff < 0 && tag.x + tag.x0 > (size[0] * 0.6) || tag.diff > 0 && tag.x + tag.x0 < (size[0] * 0.4)) continue;
         // TODO only check for collisions within current bounds.
         if (!bounds || !cloudCollide(tag, board, size[0])) {
           if (!bounds || collideRects(tag, bounds)) {

@@ -6,10 +6,12 @@
         text = cloudText,
         font = cloudFont,
         fontSize = cloudFontSize,
+        fontStyle = cloudFontNormal,
+        fontWeight = cloudFontNormal,
         rotate = cloudRotate,
         padding = cloudPadding,
         spiral = archimedeanSpiral,
-		diff = cloudDiff,
+        diff = cloudDiff,
         words = [],
         timeInterval = Infinity,
         event = d3.dispatch("word", "end"),
@@ -23,15 +25,16 @@
           i = -1,
           tags = [],
           data = words.map(function(d, i) {
-        return {
-          text: text.call(this, d, i),
-          font: font.call(this, d, i),
-          rotate: rotate.call(this, d, i),
-          size: ~~fontSize.call(this, d, i),
-          padding: cloudPadding.call(this, d, i),
-		  diff: diff.call(this, d, i)
-        };
-      }).sort(function(a, b) { return b.size - a.size; });
+            d.text = text.call(this, d, i);
+            d.font = font.call(this, d, i);
+            d.style = fontStyle.call(this, d, i);
+            d.weight = fontWeight.call(this, d, i);
+            d.rotate = rotate.call(this, d, i);
+            d.size = ~~fontSize.call(this, d, i);
+            d.padding = cloudPadding.call(this, d, i);
+            d.diff = diff.call(this, d, i)
+            return d;
+          }).sort(function(a, b) { return b.size - a.size; });
 
       if (timer) clearInterval(timer);
       timer = setInterval(step, 0);
@@ -98,11 +101,11 @@
 
         tag.x = startX + dx;
         tag.y = startY + dy;
-		
+
         if (tag.x + tag.x0 < 0 || tag.y + tag.y0 < 0 ||
             tag.x + tag.x1 > size[0] || tag.y + tag.y1 > size[1]) continue;
-		// Make sure that tags of a certain color stay roughly in the right place (namely, the right half).
-		if (tag.diff < 0 && tag.x + tag.x0 > (size[0] * 0.6) || tag.diff > 0 && tag.x + tag.x0 < (size[0] * 0.4)) continue;
+        // Make sure that tags of a certain color stay roughly in the right place (namely, the right half).
+        if (tag.diff < 0 && tag.x + tag.x0 > (size[0] * 0.6) || tag.diff > 0 && tag.x + tag.x0 < (size[0] * 0.4)) continue;
         // TODO only check for collisions within current bounds.
         if (!bounds || !cloudCollide(tag, board, size[0])) {
           if (!bounds || collideRects(tag, bounds)) {
@@ -148,6 +151,18 @@
       return cloud;
     };
 
+    cloud.fontStyle = function(x) {
+      if (!arguments.length) return fontStyle;
+      fontStyle = d3.functor(x);
+      return cloud;
+    };
+
+    cloud.fontWeight = function(x) {
+      if (!arguments.length) return fontWeight;
+      fontWeight = d3.functor(x);
+      return cloud;
+    };
+
     cloud.rotate = function(x) {
       if (!arguments.length) return rotate;
       rotate = d3.functor(x);
@@ -178,12 +193,12 @@
       return cloud;
     };
 
-	cloud.diff = function(x) {
-	  if (!arguments.length) return diff;
-	  diff = d3.functor(x);
-	  return cloud;
-	};
-	  
+    cloud.diff = function(x) {
+      if (!arguments.length) return diff;
+      diff = d3.functor(x);
+      return cloud;
+    };
+
     return d3.rebind(cloud, event, "on");
   }
 
@@ -193,6 +208,10 @@
 
   function cloudFont() {
     return "serif";
+  }
+
+  function cloudFontNormal() {
+    return "normal";
   }
 
   function cloudFontSize(d) {
@@ -206,7 +225,7 @@
   function cloudPadding() {
     return 1;
   }
-  
+
   function cloudDiff() {
     return Math.random() * 2 - 1;
   }
@@ -224,7 +243,7 @@
     while (++di < n) {
       d = data[di];
       c.save();
-      c.font = ~~((d.size + 1) / ratio) + "px " + d.font;
+      c.font = d.style + " " + d.weight + " " + ~~((d.size + 1) / ratio) + "px " + d.font;
       var w = c.measureText(d.text + "m").width * ratio,
           h = d.size << 1;
       if (d.rotate) {
